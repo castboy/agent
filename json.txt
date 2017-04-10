@@ -1,0 +1,2 @@
+[{"waf":{"First":0,"Current":0,"Last":100,"Weight":5,"Stop":false}, "wafOffline":{"First":0,"Current":0,"Last":100,"Weight":9,"Stop":false},"wafOffline2":{"First":0,"Current":0,"Last":300,"Weight":4,"Stop":false}},{"vds":{"First":10,"Current":0,"Last":0,"Weight":9,"Stop":false},"vdsOffline":{"First":0,"Current":0,"Last":0,"Weight":0,"Stop":false}}]
+
