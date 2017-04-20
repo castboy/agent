@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    pkg_wmg.Read("json.v2")
+    pkg_wmg.Read("json.txt")
     pkg_wmg.InitWafVds()
     pkg_wmg.InitBroker()
     pkg_wmg.UpdateOffset()
