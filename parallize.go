@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    pkg_wmg.Read("waf.record")
+    pkg_wmg.Read("data.init")
     pkg_wmg.InitWafVds()
     pkg_wmg.InitBroker()
     pkg_wmg.UpdateOffset()
@@ -15,6 +15,6 @@ func main() {
     pkg_wmg.InitPrefetchMsgSwitchMap()
     go pkg_wmg.Manage()
     go pkg_wmg.InitPrefetch()
-    go pkg_wmg.Record("waf.record")
-    pkg_wmg.Listen("localhost:8081")
+    go pkg_wmg.Record("data.record")
+    pkg_wmg.Listen(":8081")
 }
