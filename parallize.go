@@ -8,6 +8,7 @@ import (
 func main() {
     pkg_wmg.Read("data.init")
     pkg_wmg.InitWafVds()
+    pkg_wmg.InitConf("conf.data")
     pkg_wmg.InitBroker()
     pkg_wmg.UpdateOffset()
     pkg_wmg.InitConsumers()
