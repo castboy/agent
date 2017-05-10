@@ -1,1 +1,1 @@
-{"HostPort1": "10.80.6.9:9092", "HostPort2": "10.80.6.9:9093", "Partition": 0, "MaxCache": 50}
+{"Host": "10.80.6.9", "Partition": 0, "MaxCache": 50}
