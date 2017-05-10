@@ -2,21 +2,21 @@ package main
 
 import (
     //"fmt"
-    "pkg_wmg"
+    "agent_pkg"
 )
 
 func main() {
-    pkg_wmg.Read("data.init")
-    pkg_wmg.InitWafVds()
-    pkg_wmg.InitConf("conf.data")
-    pkg_wmg.InitBroker()
-    pkg_wmg.UpdateOffset()
-    pkg_wmg.InitConsumers()
-    pkg_wmg.InitCacheInfoMap()
-    pkg_wmg.InitCacheDataMap()
-    pkg_wmg.InitPrefetchMsgSwitchMap()
-    go pkg_wmg.Manage()
-    go pkg_wmg.InitPrefetch()
-    go pkg_wmg.Record("data.record")
-    pkg_wmg.Listen(":8081")
+    agent_pkg.Read("data.init")
+    agent_pkg.InitWafVds()
+    agent_pkg.InitConf("conf.data")
+    agent_pkg.InitBroker()
+    agent_pkg.UpdateOffset()
+    agent_pkg.InitConsumers()
+    agent_pkg.InitCacheInfoMap()
+    agent_pkg.InitCacheDataMap()
+    agent_pkg.InitPrefetchMsgSwitchMap()
+    go agent_pkg.Manage()
+    go agent_pkg.InitPrefetch()
+    go agent_pkg.Record("data.record")
+    agent_pkg.Listen(":8081")
 }
