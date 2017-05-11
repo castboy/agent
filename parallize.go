@@ -5,7 +5,16 @@ import (
     "agent_pkg"
 )
 
+func Etcd() {
+    setConf := agent_pkg.SetConf()
+    agent_pkg.InitEtcdCli()
+    agent_pkg.EtcdSet("apt/agent/conf", setConf)
+    getConf := agent_pkg.EtcdGet("apt/agent/conf")
+    agent_pkg.ParseConf(getConf)
+}
+
 func main() {
+    Etcd()
     agent_pkg.Read("data.init")
     agent_pkg.InitWafVds()
     agent_pkg.InitConf("conf.data")
