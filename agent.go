@@ -1,7 +1,7 @@
 package main
 
 import (
-    "fmt"
+    //"fmt"
     "strconv"
     "agent_pkg"
 )
@@ -17,13 +17,11 @@ func GetConf() {
 func GetStatus() {
     status := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
-    fmt.Println(string(status))
     if len(status) == 0 {
         agent_pkg.InitWafVds()
     } else {
         agent_pkg.UpdateWafVds(status) 
     }
-    //fmt.Println("Waf:", Waf)
 }
 
 func Kafka() {
