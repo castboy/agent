@@ -6,7 +6,11 @@ import (
     "agent_pkg"
 )
 
-func GetConf() {
+func InitLog () {
+    agent_pkg.InitLog()
+}
+
+func GetConf () {
     agent_pkg.InitEtcdCli()
     getConf := agent_pkg.EtcdGet("apt/agent/conf")
     agent_pkg.ParseConf(getConf)
@@ -14,7 +18,7 @@ func GetConf() {
     agent_pkg.GetPartition()
 }
 
-func GetStatus() {
+func GetStatus () {
     status := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
     if len(status) == 0 {
@@ -24,29 +28,30 @@ func GetStatus() {
     }
 }
 
-func Kafka() {
+func Kafka () {
     agent_pkg.InitBroker(agent_pkg.Localhost)
     agent_pkg.UpdateOffset()
     agent_pkg.InitConsumers(agent_pkg.Partition)
 }
 
-func Cache() {
+func Cache () {
     agent_pkg.InitCacheInfoMap()
     agent_pkg.InitCacheDataMap()
     agent_pkg.InitPrefetchMsgSwitchMap()
 }
 
-func Listen() {
+func Listen () {
     agent_pkg.ListenReq(":" + strconv.Itoa(agent_pkg.AgentConf.EngineReqPort))
 }
 
-func main() {
+func main () {
+    InitLog()
     GetConf()
     GetStatus()
     Kafka()
     Cache()
     go agent_pkg.Manage()
     go agent_pkg.InitPrefetch()
-    go agent_pkg.Record()
+    go agent_pkg.Record(3)
     Listen()
 }
