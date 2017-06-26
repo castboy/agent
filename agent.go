@@ -6,10 +6,6 @@ import (
     "agent_pkg"
 )
 
-func InitLog () {
-    agent_pkg.InitLog()
-}
-
 func GetConf () {
     agent_pkg.InitEtcdCli()
     getConf := agent_pkg.EtcdGet("apt/agent/conf")
@@ -40,12 +36,21 @@ func Cache () {
     agent_pkg.InitPrefetchMsgSwitchMap()
 }
 
+func Hdfs () {
+    agent_pkg.InitHdfsCli()
+    agent_pkg.HdfsToLocals()
+}
+
+func Log () {
+    agent_pkg.InitLog()
+}
+
 func Listen () {
     agent_pkg.ListenReq(":" + strconv.Itoa(agent_pkg.AgentConf.EngineReqPort))
 }
 
 func main () {
-    InitLog()
+    Log()
     GetConf()
     GetStatus()
     Kafka()
