@@ -1,7 +1,7 @@
 package main
 
 import (
-    //"fmt"
+    "fmt"
     "strconv"
     "agent_pkg"
 )
@@ -15,6 +15,7 @@ func GetConf () {
 }
 
 func GetStatus () {
+    fmt.Println("Localhost:", agent_pkg.Localhost)
     status := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
     if len(status) == 0 {
@@ -37,7 +38,7 @@ func Cache () {
 }
 
 func Hdfs () {
-    agent_pkg.InitHdfsCli("192.168.1.108:8020")
+    agent_pkg.InitHdfsCli("10.80.6.7:8020")
     agent_pkg.HdfsToLocals()
 }
 
@@ -55,6 +56,7 @@ func main () {
     GetStatus()
     Kafka()
     Cache()
+    Hdfs()
     go agent_pkg.Manage()
     go agent_pkg.InitPrefetch()
     go agent_pkg.Record(3)
