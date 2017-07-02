@@ -38,7 +38,7 @@ func Cache () {
 }
 
 func Hdfs () {
-    agent_pkg.InitHdfsCli("10.80.6.7:8020")
+    agent_pkg.InitHdfsCli("192.168.1.108:8020")
     agent_pkg.HdfsToLocals()
 }
 

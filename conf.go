@@ -13,7 +13,7 @@ func SetConf(partitions map[string]int32) string {
 
     topic := []string{"xdrHttp", "xdrFile"}
 
-    conf := agent_pkg.Conf{8081, 100, partitions, topic} 
+    conf := agent_pkg.Conf{8091, 10, partitions, topic} 
 
     byte, _ := json.Marshal(conf)
     
