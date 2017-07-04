@@ -1,3 +1,22 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Gist
+ @castboy
+ Sign out
+ Unwatch 1
+  Star 0
+ Fork 0 castboy/agent
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Settings Insights 
+Branch: v2.2 Find file Copy pathagent/watch.go
+e5c9804  29 minutes ago
+ castboy right watch.go
+0 contributors
+RawBlameHistory     
+94 lines (77 sloc)  2.18 KB
 package main
 
 import (
@@ -36,7 +55,7 @@ func Watch() {
     rch := cli.Watch(context.Background(), "apt/agent/offlineReq/", clientv3.WithPrefix())
     for wresp := range rch {
         for _, ev := range wresp.Events {
-            //fmt.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
+            fmt.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
             fmt.Println(string(ev.Kv.Value))
             ParseOfflineMsg(ev.Kv.Value)
             PushOfflineMsg()
@@ -53,16 +72,28 @@ func ParseOfflineMsg (msg []byte) {
 
 func HttpGet (ip string, msg OfflineMsg) {
     var err error
+    url := "http://" + ip + ":8081/offline"
 
-    if msg.SignalType == "start" {
-        url := "http://" + ip + ":8081/start"
-        params := "type=" + msg.Engine + "&topic=" + msg.Topic + "&weight=" +strconv.Itoa(msg.Weight)
-        //fmt.Println(params)
-        _, err = http.Get(url + "?" + params)
-    } else {
-        url := "http://" + ip + ":8081/stop"
-        params := "type=" + msg.Engine + "&topic=" + msg.Topic
-        _, err = http.Get(url + "?" + params)
+    switch msg.SignalType {
+        case "start":
+            params := "type=" + msg.SignalType + "&engine=" + msg.Engine + "&topic=" + msg.Topic + "&weight=" +strconv.Itoa(msg.Weight)
+            _, err = http.Get(url + "?" + params)
+            break
+
+        case "stop":
+            params := "type=" + msg.SignalType + "&engine=" + msg.Engine + "&topic=" + msg.Topic
+            _, err = http.Get(url + "?" + params)
+            break
+
+        case "shutdown":
+            params := "type=" + msg.SignalType + "&engine=" + msg.Engine + "&topic=" + msg.Topic
+            _, err = http.Get(url + "?" + params)
+            break
+
+        case "complete":
+            params := "type=" + msg.SignalType + "&engine=" + msg.Engine + "&topic=" + msg.Topic
+            _, err = http.Get(url + "?" + params)
+            break
     }
 
     if err != nil {
@@ -78,3 +109,6 @@ func PushOfflineMsg () {
 func main () {
     Watch()
 }
+
+Contact GitHub API Training Shop Blog About
+© 2017 GitHub, Inc. Terms Privacy Security Status Help
