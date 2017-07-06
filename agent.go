@@ -60,6 +60,6 @@ func main() {
 	go agent_pkg.Manage()
 	go agent_pkg.InitPrefetch()
 	go agent_pkg.Record(3)
-	go agent_pkg.SendClearFileHdlMsg(1)
+	go agent_pkg.SendClearFileHdlMsg(20)
 	Listen()
 }
