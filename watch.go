@@ -1,22 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Gist
- @castboy
- Sign out
- Unwatch 1
-  Star 0
- Fork 0 castboy/agent
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Settings Insights 
-Branch: v2.2 Find file Copy pathagent/watch.go
-e5c9804  29 minutes ago
- castboy right watch.go
-0 contributors
-RawBlameHistory     
-94 lines (77 sloc)  2.18 KB
 package main
 
 import (
