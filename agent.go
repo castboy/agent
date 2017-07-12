@@ -43,7 +43,10 @@ func Cache() {
 }
 
 func Hdfs() {
-	agent_pkg.InitHdfsCli("192.168.1.108:8020")
+	conf := goini.SetConfig("conf.ini")
+	nameNode := conf.GetValue("hdfs", "nameNode")
+
+	agent_pkg.InitHdfsCli(nameNode + ":8020")
 	agent_pkg.HdfsToLocals()
 }
 
