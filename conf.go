@@ -3,7 +3,6 @@ package main
 import (
 	"agent_pkg"
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/widuu/goini"
@@ -22,7 +21,6 @@ func SetConf(port int, cache int, partitions map[string]int32, wafTopic string, 
 func main() {
 	conf := goini.SetConfig("conf.ini")
 	confList := conf.ReadList()
-	fmt.Println(confList)
 
 	port, _ := strconv.Atoi(confList[7]["other"]["port"])
 	cache, _ := strconv.Atoi(confList[7]["other"]["cache"])
@@ -37,7 +35,6 @@ func main() {
 	}
 
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic)
-	fmt.Println(setConf)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 
