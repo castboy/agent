@@ -1,33 +1,44 @@
 package main
 
 import (
-    "encoding/json"
-    "agent_pkg"
+	"agent_pkg"
+	"encoding/json"
+	"strconv"
+
+	"github.com/widuu/goini"
 )
 
-func SetConf(partitions map[string]int32) string {
-    partitions["192.168.1.103"] = 0
-    partitions["192.168.1.104"] = 1
-    partitions["192.168.1.105"] = 2
-    partitions["192.168.1.106"] = 3
+func SetConf(port int, cache int, partitions map[string]int32, wafTopic string, vdsTopic string) string {
+	topic := []string{wafTopic, vdsTopic}
 
-    topic := []string{"xdrHttp", "xdrFile"}
+	conf := agent_pkg.Conf{port, cache, partitions, topic}
 
-    conf := agent_pkg.Conf{8091, 10, partitions, topic} 
+	byte, _ := json.Marshal(conf)
 
-    byte, _ := json.Marshal(conf)
-    
-    return string(byte)
+	return string(byte)
 }
 
 func main() {
-    partitions := make(map[string]int32)
-    setConf := SetConf(partitions)
-    agent_pkg.InitEtcdCli()
-    agent_pkg.EtcdSet("apt/agent/conf", setConf)
+	conf := goini.SetConfig("conf.ini")
+	confList := conf.ReadList()
 
-    for key, _ := range partitions {
-        agent_pkg.EtcdSet("apt/agent/status/"+key, "")         
-    }
+	port, _ := strconv.Atoi(confList[0]["other"]["port"])
+	cache, _ := strconv.Atoi(confList[0]["other"]["cache"])
+	wafTopic := confList[0]["onlineTopic"]["waf"]
+	vdsTopic := confList[0]["onlineTopic"]["vds"]
+	endPoint := confList[0]["etcd"]["endPoint"]
+
+	var partitions = make(map[string]int32)
+	for key, val := range confList[0]["partition"] {
+		partition, _ := strconv.Atoi(val)
+		partitions[key] = int32(partition)
+	}
+
+	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic)
+	agent_pkg.InitEtcdCli(endPoint)
+	agent_pkg.EtcdSet("apt/agent/conf", setConf)
+
+	for key, _ := range partitions {
+		agent_pkg.EtcdSet("apt/agent/status/"+key, "")
+	}
 }
-

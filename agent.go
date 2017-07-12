@@ -4,10 +4,15 @@ import (
 	"agent_pkg"
 	"fmt"
 	"strconv"
+
+	"github.com/widuu/goini"
 )
 
 func GetConf() {
-	agent_pkg.InitEtcdCli()
+	conf := goini.SetConfig("conf.ini")
+	endPoint := conf.GetValue("etcd", "endPoint")
+
+	agent_pkg.InitEtcdCli(endPoint)
 	getConf := agent_pkg.EtcdGet("apt/agent/conf")
 	agent_pkg.ParseConf(getConf)
 	agent_pkg.GetLocalhost()
