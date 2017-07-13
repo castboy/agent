@@ -46,7 +46,7 @@ func Hdfs() {
 	conf := goini.SetConfig("conf.ini")
 	nameNode := conf.GetValue("hdfs", "nameNode")
 
-	agent_pkg.InitHdfsCli(nameNode + ":8020")
+	agent_pkg.InitHdfsCli(nameNode)
 	agent_pkg.HdfsToLocals()
 }
 
