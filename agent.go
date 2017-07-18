@@ -32,8 +32,8 @@ func GetStatus() {
 
 func Kafka() {
 	agent_pkg.InitBroker(agent_pkg.Localhost)
-	agent_pkg.UpdateOffset()
 	agent_pkg.InitConsumers(agent_pkg.Partition)
+	agent_pkg.UpdateOffset()
 }
 
 func Cache() {
