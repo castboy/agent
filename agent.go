@@ -46,10 +46,7 @@ func Cache() {
 }
 
 func Hdfs() {
-	conf := goini.SetConfig("conf.ini")
-	nameNode := conf.GetValue("hdfs", "nameNode")
-
-	agent_pkg.InitHdfsCli(nameNode)
+	agent_pkg.InitHdfsCli(agent_pkg.AgentConf.HdfsNameNode)
 	agent_pkg.HdfsToLocals()
 }
 

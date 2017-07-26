@@ -9,10 +9,10 @@ import (
 	"github.com/widuu/goini"
 )
 
-func SetConf(port int, cache int, partitions map[string]int32, wafTopic string, vdsTopic string) string {
+func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, nameNode string) string {
 	topic := []string{wafTopic, vdsTopic}
 
-	conf := agent_pkg.Conf{port, cache, partitions, topic}
+	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
@@ -39,6 +39,7 @@ func main() {
 	wafTopic := conf.GetValue("onlineTopic", "waf")
 	vdsTopic := conf.GetValue("onlineTopic", "vds")
 	endPoint := conf.GetValue("etcd", "endPoint")
+	nameNode := conf.GetValue("hdfs", "nameNode")
 
 	var partitions = make(map[string]int32)
 	for key, val := range confList[0]["partition"] {
@@ -49,7 +50,7 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic)
+	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }
