@@ -3,6 +3,7 @@ package main
 import (
 	"agent_pkg"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/widuu/goini"
@@ -13,7 +14,11 @@ func GetConf() {
 	endPoint := conf.GetValue("etcd", "endPoint")
 
 	agent_pkg.InitEtcdCli(endPoint)
-	getConf := agent_pkg.EtcdGet("apt/agent/conf")
+	getConf, ok := agent_pkg.EtcdGet("apt/agent/conf")
+	if !ok {
+		log.Fatal("configurations does not exist")
+	}
+
 	agent_pkg.ParseConf(getConf)
 	agent_pkg.GetLocalhost()
 	agent_pkg.GetPartition()
@@ -21,9 +26,9 @@ func GetConf() {
 
 func GetStatus() {
 	fmt.Println("Localhost:", agent_pkg.Localhost)
-	status := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
+	status, ok := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
-	if len(status) == 0 {
+	if !ok {
 		agent_pkg.InitWafVds()
 	} else {
 		agent_pkg.UpdateWafVds(status)

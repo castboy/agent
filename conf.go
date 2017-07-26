@@ -52,8 +52,4 @@ func main() {
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
-
-	for key, _ := range partitions {
-		agent_pkg.EtcdSet("apt/agent/status/"+key, "")
-	}
 }
