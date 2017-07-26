@@ -2,7 +2,6 @@ package main
 
 import (
 	"agent_pkg"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -25,7 +24,6 @@ func GetConf() {
 }
 
 func GetStatus() {
-	fmt.Println("Localhost:", agent_pkg.Localhost)
 	status, ok := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
 	if !ok {
