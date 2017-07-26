@@ -22,14 +22,14 @@ func main() {
 	conf := goini.SetConfig("conf.ini")
 	confList := conf.ReadList()
 
-	port, _ := strconv.Atoi(confList[7]["other"]["port"])
-	cache, _ := strconv.Atoi(confList[7]["other"]["cache"])
-	wafTopic := confList[0]["onlineTopic"]["waf"]
-	vdsTopic := confList[0]["onlineTopic"]["vds"]
-	endPoint := confList[6]["etcd"]["endPoint"]
+	port, _ := strconv.Atoi(conf.GetValue("other", "port"))
+	cache, _ := strconv.Atoi(conf.GetValue("other", "cache"))
+	wafTopic := conf.GetValue("onlineTopic", "waf")
+	vdsTopic := conf.GetValue("onlineTopic", "vds")
+	endPoint := conf.GetValue("etcd", "endPoint")
 
 	var partitions = make(map[string]int32)
-	for key, val := range confList[5]["partition"] {
+	for key, val := range confList[0]["partition"] {
 		partition, _ := strconv.Atoi(val)
 		partitions[key] = int32(partition)
 	}
