@@ -40,8 +40,8 @@ func Kafka() {
 }
 
 func Cache() {
-	agent_pkg.InitCacheInfoMap()
-	agent_pkg.InitCacheDataMap()
+	agent_pkg.InitBuffersStatus()
+	agent_pkg.InitBuffer()
 	agent_pkg.InitPrefetchMsgSwitchMap()
 }
 
