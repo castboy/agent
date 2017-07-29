@@ -95,7 +95,7 @@ func PushOfflineMsg() {
 	confList := conf.ReadList()
 
 	var partitions = make(map[string]int32)
-	for key, val := range confList[5]["partition"] {
+	for key, val := range confList[0]["partition"] {
 		partition, _ := strconv.Atoi(val)
 		partitions[key] = int32(partition)
 	}
