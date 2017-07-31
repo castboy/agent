@@ -62,25 +62,25 @@ func HttpGet(ip string, msg OfflineMsg) {
 
 	switch msg.SignalType {
 	case "start":
-		params := fmt.Sprintf("signal=%s&engine=%s&topic=%s&weight=%d&task=%s",
+		params := fmt.Sprintf("signal=%s&type=%s&topic=%s&weight=%d&task=%s",
 			msg.SignalType, msg.Engine, msg.Topic, strconv.Itoa(msg.Weight), msg.TaskType)
 		_, err = http.Get(url + "?" + params)
 		break
 
 	case "stop":
-		params := fmt.Sprintf("signal=%s&engine=%s&topic=%s&task=%s",
+		params := fmt.Sprintf("signal=%s&type=%s&topic=%s&task=%s",
 			msg.SignalType, msg.Engine, msg.Topic, msg.TaskType)
 		_, err = http.Get(url + "?" + params)
 		break
 
 	case "shutdown":
-		params := fmt.Sprintf("signal=%s&engine=%s&topic=%s&task=%s",
+		params := fmt.Sprintf("signal=%s&type=%s&topic=%s&task=%s",
 			msg.SignalType, msg.Engine, msg.Topic, msg.TaskType)
 		_, err = http.Get(url + "?" + params)
 		break
 
 	case "complete":
-		params := fmt.Sprintf("signal=%s&engine=%s&topic=%s&task=%s",
+		params := fmt.Sprintf("signal=%s&type=%s&topic=%s&task=%s",
 			msg.SignalType, msg.Engine, msg.Topic, msg.TaskType)
 		_, err = http.Get(url + "?" + params)
 		break
