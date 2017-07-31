@@ -58,7 +58,10 @@ func ParseOfflineMsg(msg []byte) {
 
 func HttpGet(ip string, msg OfflineMsg) {
 	var err error
-	url := fmt.Sprintf("http://%s:8081/offline", ip)
+	conf := goini.SetConfig("conf.ini")
+	port := conf.GetValue("other", "port")
+
+	url := fmt.Sprintf("http://%s:%s/offline", ip, port)
 
 	switch msg.SignalType {
 	case "start":
