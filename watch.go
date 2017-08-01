@@ -44,7 +44,7 @@ func Watch() {
 			fmt.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
 			fmt.Println(string(ev.Kv.Value))
 			ParseOfflineMsg(ev.Kv.Value)
-			PushOfflineMsg()
+			HttpGet("127.0.0.1", offlineMsg)
 		}
 	}
 }
@@ -62,6 +62,7 @@ func HttpGet(ip string, msg OfflineMsg) {
 	port := conf.GetValue("other", "port")
 
 	url := fmt.Sprintf("http://%s:%s/offline", "127.0.0.1", port)
+	fmt.Println(url)
 
 	switch msg.SignalType {
 	case "start":
@@ -94,20 +95,6 @@ func HttpGet(ip string, msg OfflineMsg) {
 	}
 
 	if err != nil {
-	}
-}
-
-func PushOfflineMsg() {
-	conf := goini.SetConfig("conf.ini")
-	confList := conf.ReadList()
-
-	var partitions = make(map[string]int32)
-	for key, val := range confList[0]["partition"] {
-		partition, _ := strconv.Atoi(val)
-		partitions[key] = int32(partition)
-	}
-	for ip, _ := range partitions {
-		HttpGet(ip, offlineMsg)
 	}
 }
 
