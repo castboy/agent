@@ -40,6 +40,7 @@ func Watch() {
 	rch := cli.Watch(context.Background(), "apt/agent/offlineReq/", clientv3.WithPrefix())
 	for wresp := range rch {
 		for _, ev := range wresp.Events {
+			fmt.Println("for block")
 			fmt.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
 			fmt.Println(string(ev.Kv.Value))
 			ParseOfflineMsg(ev.Kv.Value)
@@ -67,24 +68,28 @@ func HttpGet(ip string, msg OfflineMsg) {
 		params := fmt.Sprintf("signal=%s&type=%s&topic=%s&weight=%d",
 			msg.SignalType, msg.Engine, msg.Topic, strconv.Itoa(msg.Weight))
 		_, err = http.Get(url + "?" + params)
+		fmt.Println("end start msg")
 		break
 
 	case "stop":
 		params := fmt.Sprintf("signal=%s&type=%s&topic=%s",
 			msg.SignalType, msg.Engine, msg.Topic)
 		_, err = http.Get(url + "?" + params)
+		fmt.Println("end stop msg")
 		break
 
 	case "shutdown":
 		params := fmt.Sprintf("signal=%s&type=%s&topic=%s",
 			msg.SignalType, msg.Engine, msg.Topic)
 		_, err = http.Get(url + "?" + params)
+		fmt.Println("end shutdown msg")
 		break
 
 	case "complete":
 		params := fmt.Sprintf("signal=%s&type=%s&topic=%s",
 			msg.SignalType, msg.Engine, msg.Topic)
 		_, err = http.Get(url + "?" + params)
+		fmt.Println("end complete msg")
 		break
 	}
 
