@@ -9,10 +9,10 @@ import (
 	"github.com/widuu/goini"
 )
 
-func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, nameNode string) string {
+func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, nameNode, webServerIp string, webServerPort int) string {
 	topic := []string{wafTopic, vdsTopic}
 
-	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode}
+	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode, webServerIp, webServerPort}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
@@ -40,6 +40,12 @@ func main() {
 	vdsTopic := conf.GetValue("onlineTopic", "vds")
 	endPoint := conf.GetValue("etcd", "endPoint")
 	nameNode := conf.GetValue("hdfs", "nameNode")
+	webServerIp := conf.GetValue("webServer", "ip")
+
+	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
+	if nil != err {
+		log.Fatal("webServerPort config err")
+	}
 
 	var partitions = make(map[string]int32)
 	for key, val := range confList[0]["partition"] {
@@ -50,7 +56,7 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode)
+	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode, webServerIp, webServerPort)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }
