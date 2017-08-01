@@ -61,7 +61,7 @@ func HttpGet(ip string, msg OfflineMsg) {
 	conf := goini.SetConfig("conf.ini")
 	port := conf.GetValue("other", "port")
 
-	url := fmt.Sprintf("http://%s:%s/offline", ip, port)
+	url := fmt.Sprintf("http://%s:%s/offline", "127.0.0.1", port)
 
 	switch msg.SignalType {
 	case "start":
