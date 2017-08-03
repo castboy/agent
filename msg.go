@@ -25,11 +25,11 @@ var kafkaAddrs = []string{"192.168.1.103:9092", "192.168.1.103:9093"}
 
 func main() {
 	var msgs [5]OfflineMsg
-	msgs[0] = OfflineMsg{"waf", "waf-alert", 10, "start"}
-	msgs[1] = OfflineMsg{"waf", "waf-alert", 10, "shutdown"}
-	msgs[2] = OfflineMsg{"waf", "waf-alert", 10, "start"}
-	msgs[3] = OfflineMsg{"waf", "waf-alert", 10, "stop"}
-	msgs[4] = OfflineMsg{"vds", "vds-alert", 10, "start"}
+	msgs[0] = OfflineMsg{"vds", "vds-alert", 10, "start"}
+	msgs[1] = OfflineMsg{"vds", "vds-alert", 10, "shutdown"}
+	msgs[2] = OfflineMsg{"vds", "vds-alert", 10, "start"}
+	msgs[3] = OfflineMsg{"vds", "vds-alert", 10, "stop"}
+	msgs[4] = OfflineMsg{"waf", "waf-alert", 10, "start"}
 
 	conf := kafka.NewBrokerConf("test-client")
 	conf.AllowTopicCreation = true
