@@ -21,7 +21,7 @@ const (
 	partition = 0
 )
 
-var kafkaAddrs = []string{"localhost:9092", "localhost:9093"}
+var kafkaAddrs = []string{"192.168.1.103:9092", "192.168.1.103:9093"}
 
 func main() {
 	var msgs [5]OfflineMsg
