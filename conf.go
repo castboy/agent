@@ -10,7 +10,7 @@ import (
 )
 
 func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, nameNode, webServerIp string,
-	webServerPort int, wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string, offlineMsgPartition int) string {
+	webServerPort int, wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string, offlineMsgPartition, offlineMsgStartOffset int) string {
 	topic := []string{wafTopic, vdsTopic}
 
 	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode, webServerIp,
@@ -51,6 +51,10 @@ func main() {
 	if nil != err {
 		log.Fatal("offlineMsgPartition config err")
 	}
+	offlineMsgStartOffset, err := strconv.Atoi(conf.GetValue("offlineMsg", "startOffset"))
+	if nil != err {
+		log.Fatal("offlineMsgstartOffset config err")
+	}
 
 	webServerIp := conf.GetValue("webServer", "ip")
 	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
@@ -67,8 +71,8 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode,
-		webServerIp, webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition)
+	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode, webServerIp,
+		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }
