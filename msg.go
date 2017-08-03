@@ -17,7 +17,7 @@ type OfflineMsg struct {
 }
 
 const (
-	topic     = "my-messages"
+	topic     = "offline_msg"
 	partition = 0
 )
 
