@@ -23,13 +23,13 @@ func GetConf() {
 	agent_pkg.GetPartition()
 }
 
-func GetStatus() {
+func SetStatus() {
 	status, ok := agent_pkg.EtcdGet("apt/agent/status/" + agent_pkg.Localhost)
 
 	if !ok {
-		agent_pkg.InitWafVds()
+		agent_pkg.InitStatus()
 	} else {
-		agent_pkg.UpdateWafVds(status)
+		agent_pkg.GetStatusFromEtcd(status)
 	}
 }
 
@@ -61,7 +61,7 @@ func Listen() {
 func main() {
 	Log()
 	GetConf()
-	GetStatus()
+	SetStatus()
 	Kafka()
 	Cache()
 	Hdfs()
@@ -69,5 +69,7 @@ func main() {
 	go agent_pkg.InitPrefetch()
 	go agent_pkg.Record(3)
 	go agent_pkg.SendClearFileHdlMsg(20)
+	go agent_pkg.TimingGetOfflineMsg(5)
+	SetStatus()
 	Listen()
 }
