@@ -65,12 +65,11 @@ func main() {
 	Kafka()
 	Cache()
 	Hdfs()
-	SetStatus()
 	go agent_pkg.Manage()
 	go agent_pkg.InitPrefetch()
 	go agent_pkg.SendClearFileHdlMsg(20)
-
-	go agent_pkg.TimingGetOfflineMsg(5)
 	go agent_pkg.Record(3)
+	SetStatus()
+	go agent_pkg.TimingGetOfflineMsg(5)
 	Listen()
 }
