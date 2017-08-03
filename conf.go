@@ -14,7 +14,7 @@ func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, n
 	topic := []string{wafTopic, vdsTopic}
 
 	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition}
+		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
