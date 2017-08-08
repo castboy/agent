@@ -9,11 +9,15 @@ import (
 	"github.com/widuu/goini"
 )
 
-func SetConf(port, cache int, partitions map[string]int32, wafTopic, vdsTopic, nameNode, webServerIp string,
-	webServerPort int, wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string, offlineMsgPartition, offlineMsgStartOffset int) string {
+func SetConf(port, cache int, partitions map[string]int32,
+	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
+	nameNode, webServerIp string, webServerPort int,
+	wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string,
+	offlineMsgPartition, offlineMsgStartOffset int) string {
 	topic := []string{wafTopic, vdsTopic}
+	offset := []int64{wafOffset, vdsOffset}
 
-	conf := agent_pkg.Conf{port, cache, partitions, topic, nameNode, webServerIp,
+	conf := agent_pkg.Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset}
 
 	byte, err := json.Marshal(conf)
@@ -40,6 +44,16 @@ func main() {
 
 	wafTopic := conf.GetValue("onlineTopic", "waf")
 	vdsTopic := conf.GetValue("onlineTopic", "vds")
+
+	wafOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "waf"), 10, 64)
+	if nil != err {
+		log.Fatal("wafOffset config err")
+	}
+	vdsOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "vds"), 10, 64)
+	if nil != err {
+		log.Fatal("vdsOffset config err")
+	}
+
 	endPoint := conf.GetValue("etcd", "endPoint")
 	nameNode := conf.GetValue("hdfs", "nameNode")
 
@@ -71,7 +85,7 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, nameNode, webServerIp,
+	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
 	agent_pkg.InitEtcdCli(endPoint)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
