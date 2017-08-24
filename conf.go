@@ -84,7 +84,7 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	endPoints := confList[0]["etcd"]
+	endPoints := confList[1]["etcd"]
 
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)

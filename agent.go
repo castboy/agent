@@ -11,7 +11,7 @@ import (
 func GetConf() {
 	conf := goini.SetConfig("conf.ini")
 	confList := conf.ReadList()
-	endPoints := confList[0]["etcd"]
+	endPoints := confList[1]["etcd"]
 
 	agent_pkg.InitEtcdCli(endPoints)
 	getConf, ok := agent_pkg.EtcdGet("apt/agent/conf")
