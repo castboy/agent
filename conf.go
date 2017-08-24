@@ -54,7 +54,6 @@ func main() {
 		log.Fatal("vdsOffset config err")
 	}
 
-	endPoint := conf.GetValue("etcd", "endPoint")
 	nameNode := conf.GetValue("hdfs", "nameNode")
 
 	wafInstanceSrc := conf.GetValue("wafInstance", "src")
@@ -85,8 +84,10 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
+	endPoints := confList[0]["etcd"]
+
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
-	agent_pkg.InitEtcdCli(endPoint)
+	agent_pkg.InitEtcdCli(endPoints)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }

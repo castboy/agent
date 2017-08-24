@@ -10,9 +10,10 @@ import (
 
 func GetConf() {
 	conf := goini.SetConfig("conf.ini")
-	endPoint := conf.GetValue("etcd", "endPoint")
+	confList := conf.ReadList()
+	endPoints := confList[0]["etcd"]
 
-	agent_pkg.InitEtcdCli(endPoint)
+	agent_pkg.InitEtcdCli(endPoints)
 	getConf, ok := agent_pkg.EtcdGet("apt/agent/conf")
 	if !ok {
 		log.Fatal("configurations does not exist")
