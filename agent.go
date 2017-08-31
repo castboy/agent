@@ -4,6 +4,7 @@ import (
 	"agent_pkg"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/widuu/goini"
 )
@@ -71,5 +72,7 @@ func main() {
 	go agent_pkg.SendClearFileHdlMsg(20)
 	agent_pkg.SetStatus()
 	go agent_pkg.TimingGetOfflineMsg(3)
+
+	time.Sleep(time.Duration(1) * time.Second)
 	Listen()
 }
