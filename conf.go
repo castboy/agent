@@ -9,16 +9,16 @@ import (
 	"github.com/widuu/goini"
 )
 
-func SetConf(port, cache int, partitions map[string]int32,
+func SetConf(port, cache int,
 	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
 	nameNode, webServerIp string, webServerPort int,
 	wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string,
-	offlineMsgPartition, offlineMsgStartOffset int) string {
+	offlineMsgPartition, offlineMsgStartOffset int, kafkaHost string, kafkaPartition int32) string {
 	topic := []string{wafTopic, vdsTopic}
 	offset := []int64{wafOffset, vdsOffset}
 
-	conf := agent_pkg.Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset}
+	conf := agent_pkg.Conf{port, cache, topic, offset, nameNode, webServerIp, webServerPort, wafInstanceSrc,
+		wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset, kafkaHost, kafkaPartition}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
@@ -75,19 +75,17 @@ func main() {
 		log.Fatal("webServerPort config err")
 	}
 
-	var partitions = make(map[string]int32)
-	for key, val := range confList[0]["partition"] {
-		partition, err := strconv.Atoi(val)
-		if nil != err {
-			log.Fatal("partition config err")
-		}
-		partitions[key] = int32(partition)
-	}
-
 	endPoints := confList[1]["etcd"]
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
+	kafkaHost := conf.GetValue("kafka", "host")
+	partition, err := strconv.Atoi(conf.GetValue("kafka", "partition"))
+	if nil != err {
+		log.Fatal("kafka-partition conf err")
+	}
+	kafkaPartition := int32(partition)
+
+	setConf := SetConf(port, cache, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp, webServerPort,
+		wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset, kafkaHost, kafkaPartition)
 	agent_pkg.InitEtcdCli(endPoints)
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }
