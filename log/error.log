@@ -64,3 +64,5 @@
 2017-08-04 11:26:50 ERR InitEtcdCli Err: grpc: timed out when dialing
 2017-08-04 16:45:16 ERR InitEtcdCli Err: grpc: timed out when dialing
 2017-08-24 11:23:55 ERR InitEtcdCli Err: grpc: timed out when dialing
+2017-08-31 19:46:47 ERR InitEtcdCli Err: grpc: timed out when dialing
+2017-09-01 10:37:10 ERR InitEtcdCli Err: grpc: timed out when dialing
