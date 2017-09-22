@@ -3,7 +3,10 @@ package main
 import (
 	"agent_pkg"
 	"log"
+	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/widuu/goini"
@@ -79,6 +82,9 @@ func main_main() {
 
 func main() {
 	agent_pkg.StartPProf()
-	main_main()
+	go main_main()
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	<-c
 	agent_pkg.Stoppprof()
 }
