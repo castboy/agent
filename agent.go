@@ -36,7 +36,7 @@ func SetStatus() {
 }
 
 func Kafka() {
-	agent_pkg.InitBroker(agent_pkg.KafkaHost)
+	agent_pkg.InitBroker(agent_pkg.Localhost)
 	agent_pkg.InitConsumers(agent_pkg.Partition)
 	agent_pkg.UpdateOffset()
 }
@@ -60,7 +60,7 @@ func Listen() {
 	agent_pkg.ListenReq(":" + strconv.Itoa(agent_pkg.AgentConf.EngineReqPort))
 }
 
-func main() {
+func main_main() {
 	Log()
 	GetConf()
 	SetStatus()
@@ -75,4 +75,10 @@ func main() {
 
 	time.Sleep(time.Duration(1) * time.Second)
 	Listen()
+}
+
+func main() {
+	agent_pkg.StartPProf()
+	main_main()
+	agent_pkg.Stoppprof()
 }
