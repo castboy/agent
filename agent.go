@@ -36,7 +36,7 @@ func SetStatus() {
 }
 
 func Kafka() {
-	agent_pkg.InitBroker(agent_pkg.Kafkahost)
+	agent_pkg.InitBroker(agent_pkg.KafkaHost)
 	agent_pkg.InitConsumers(agent_pkg.Partition)
 	agent_pkg.UpdateOffset()
 }
