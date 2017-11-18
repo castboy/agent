@@ -4,6 +4,7 @@ import (
 	"agent_pkg"
 	"encoding/json"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/widuu/goini"
@@ -84,10 +85,16 @@ func main() {
 		partitions[key] = int32(partition)
 	}
 
-	endPoints := confList[1]["etcd"]
+	agent_pkg.EtcdNodes = confList[1]["etcd"]
 
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
-	agent_pkg.InitEtcdCli(endPoints)
+
+	err = os.Setenv("ETCDCTL_API", "3")
+	if nil != err {
+		log.Print("Set Env ETCDCTL_API Failed")
+	}
+
+	agent_pkg.InitEtcdCli()
 	agent_pkg.EtcdSet("apt/agent/conf", setConf)
 }
