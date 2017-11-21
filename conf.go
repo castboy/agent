@@ -1,7 +1,7 @@
 package main
 
 import (
-	"agent_pkg"
+	. "agent_pkg"
 	"encoding/json"
 	"log"
 	"os"
@@ -9,6 +9,8 @@ import (
 
 	"github.com/widuu/goini"
 )
+
+var exit = "Shut down due to critical fault."
 
 func SetConf(port, cache int, partitions map[string]int32,
 	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
@@ -18,12 +20,13 @@ func SetConf(port, cache int, partitions map[string]int32,
 	topic := []string{wafTopic, vdsTopic}
 	offset := []int64{wafOffset, vdsOffset}
 
-	conf := agent_pkg.Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
+	conf := Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
-		log.Fatal("json err")
+		Log("CRT", "json.Marshal err on %v in SetConf", conf)
+		log.Fatal(exit)
 	}
 
 	return string(byte)
@@ -35,12 +38,14 @@ func main() {
 
 	port, err := strconv.Atoi(conf.GetValue("other", "port"))
 	if nil != err {
-		log.Fatal("port config err")
+		Log("CRT", "%s", "port config err")
+		log.Fatal(exit)
 	}
 
 	cache, err := strconv.Atoi(conf.GetValue("other", "cache"))
 	if nil != err {
-		log.Fatal("cache config err")
+		Log("CRT", "%s", "cache config err")
+		log.Fatal(exit)
 	}
 
 	wafTopic := conf.GetValue("onlineTopic", "waf")
@@ -48,11 +53,13 @@ func main() {
 
 	wafOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "waf"), 10, 64)
 	if nil != err {
-		log.Fatal("wafOffset config err")
+		Log("CRT", "%s", "wafOffset config err")
+		log.Fatal(exit)
 	}
 	vdsOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "vds"), 10, 64)
 	if nil != err {
-		log.Fatal("vdsOffset config err")
+		Log("CRT", "%s", "vdsOffset config err")
+		log.Fatal(exit)
 	}
 
 	nameNode := conf.GetValue("hdfs", "nameNode")
@@ -63,38 +70,43 @@ func main() {
 	offlineMsgTopic := conf.GetValue("offlineMsg", "topic")
 	offlineMsgPartition, err := strconv.Atoi(conf.GetValue("offlineMsg", "partition"))
 	if nil != err {
-		log.Fatal("offlineMsgPartition config err")
+		Log("CRT", "%s", "offlineMsgPartition config err")
+		log.Fatal(exit)
 	}
 	offlineMsgStartOffset, err := strconv.Atoi(conf.GetValue("offlineMsg", "startOffset"))
 	if nil != err {
-		log.Fatal("offlineMsgstartOffset config err")
+		Log("CRT", "%s", "offlineMsgstartOffset config err")
+		log.Fatal(exit)
 	}
 
 	webServerIp := conf.GetValue("webServer", "ip")
 	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
 	if nil != err {
-		log.Fatal("webServerPort config err")
+		Log("CRT", "%s", "webServerPort config err")
+		log.Fatal(exit)
 	}
 
 	var partitions = make(map[string]int32)
 	for key, val := range confList[0]["partition"] {
 		partition, err := strconv.Atoi(val)
 		if nil != err {
-			log.Fatal("partition config err")
+			Log("CRT", "%s", "partition config err")
+			log.Fatal(exit)
 		}
 		partitions[key] = int32(partition)
 	}
 
-	agent_pkg.EtcdNodes = confList[1]["etcd"]
+	EtcdNodes = confList[1]["etcd"]
 
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
 		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
 
 	err = os.Setenv("ETCDCTL_API", "3")
 	if nil != err {
-		log.Print("Set Env ETCDCTL_API Failed")
+		Log("CRT", "%s", "Set Env ETCDCTL_API Failed")
+		log.Fatal(exit)
 	}
 
-	agent_pkg.InitEtcdCli()
-	agent_pkg.EtcdSet("apt/agent/conf", setConf)
+	InitEtcdCli()
+	EtcdSet("apt/agent/conf", setConf)
 }
