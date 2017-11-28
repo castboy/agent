@@ -3,14 +3,11 @@ package main
 import (
 	. "agent_pkg"
 	"encoding/json"
-	"log"
 	"os"
 	"strconv"
 
 	"github.com/widuu/goini"
 )
-
-var exit = "Shut down due to critical fault."
 
 func SetConf(port, cache int, partitions map[string]int32,
 	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
@@ -26,7 +23,6 @@ func SetConf(port, cache int, partitions map[string]int32,
 	byte, err := json.Marshal(conf)
 	if nil != err {
 		Log("CRT", "json.Marshal err on %v in SetConf", conf)
-		log.Fatal(exit)
 	}
 
 	return string(byte)
@@ -39,13 +35,11 @@ func main() {
 	port, err := strconv.Atoi(conf.GetValue("other", "port"))
 	if nil != err {
 		Log("CRT", "%s", "port config err")
-		log.Fatal(exit)
 	}
 
 	cache, err := strconv.Atoi(conf.GetValue("other", "cache"))
 	if nil != err {
 		Log("CRT", "%s", "cache config err")
-		log.Fatal(exit)
 	}
 
 	wafTopic := conf.GetValue("onlineTopic", "waf")
@@ -54,12 +48,10 @@ func main() {
 	wafOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "waf"), 10, 64)
 	if nil != err {
 		Log("CRT", "%s", "wafOffset config err")
-		log.Fatal(exit)
 	}
 	vdsOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "vds"), 10, 64)
 	if nil != err {
 		Log("CRT", "%s", "vdsOffset config err")
-		log.Fatal(exit)
 	}
 
 	nameNode := conf.GetValue("hdfs", "nameNode")
@@ -71,19 +63,16 @@ func main() {
 	offlineMsgPartition, err := strconv.Atoi(conf.GetValue("offlineMsg", "partition"))
 	if nil != err {
 		Log("CRT", "%s", "offlineMsgPartition config err")
-		log.Fatal(exit)
 	}
 	offlineMsgStartOffset, err := strconv.Atoi(conf.GetValue("offlineMsg", "startOffset"))
 	if nil != err {
 		Log("CRT", "%s", "offlineMsgstartOffset config err")
-		log.Fatal(exit)
 	}
 
 	webServerIp := conf.GetValue("webServer", "ip")
 	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
 	if nil != err {
 		Log("CRT", "%s", "webServerPort config err")
-		log.Fatal(exit)
 	}
 
 	var partitions = make(map[string]int32)
@@ -91,7 +80,6 @@ func main() {
 		partition, err := strconv.Atoi(val)
 		if nil != err {
 			Log("CRT", "%s", "partition config err")
-			log.Fatal(exit)
 		}
 		partitions[key] = int32(partition)
 	}
@@ -104,7 +92,6 @@ func main() {
 	err = os.Setenv("ETCDCTL_API", "3")
 	if nil != err {
 		Log("CRT", "%s", "Set Env ETCDCTL_API Failed")
-		log.Fatal(exit)
 	}
 
 	InitEtcdCli()
