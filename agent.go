@@ -8,7 +8,7 @@ import (
 func main() {
 	InitLog()
 	GetConf()
-        InitBroker()
+	InitBroker()
 	RightStatus()
 	Kafka()
 	Buffer()
@@ -18,6 +18,7 @@ func main() {
 	go SendClearFileHdlMsg(20)
 	SetStatus()
 	go TimingGetOfflineMsg(3)
+	go ReqCount()
 
 	time.Sleep(time.Duration(1) * time.Second)
 	Listen()
