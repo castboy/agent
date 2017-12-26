@@ -8,6 +8,7 @@ import (
 func main() {
 	InitLog()
 	GetConf()
+        InitBroker()
 	RightStatus()
 	Kafka()
 	Buffer()

@@ -1,7 +1,7 @@
 <seelog minlevel="trace">
     <outputs formatid="main">   
 		<filter levels="trace, debug, info, warn, error, critical">
-                <rollingfile type="size" filename="log/log" maxsize="102400" maxrolls="5"/>
+                <rollingfile type="size" filename="log/log" maxsize="1024000" maxrolls="20"/>
         </filter>
     </outputs>
     <formats>

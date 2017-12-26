@@ -63,10 +63,6 @@ func main() {
 	if nil != err {
 		Log("CRT", "%s", "offlineMsgPartition config err")
 	}
-	offlineMsgStartOffset, err := strconv.Atoi(conf.GetValue("offlineMsg", "startOffset"))
-	if nil != err {
-		Log("CRT", "%s", "offlineMsgstartOffset config err")
-	}
 
 	webServerIp := conf.GetValue("webServer", "ip")
 	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
@@ -86,7 +82,7 @@ func main() {
 	EtcdNodes = confList[1]["etcd"]
 
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset)
+		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, 0)
 
 	InitEtcdCli()
 	EtcdSet("apt/agent/conf", setConf)
