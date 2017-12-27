@@ -16,7 +16,7 @@ func main() {
 	go Manage()
 	go InitPrefetch()
 	go SendClearFileHdlMsg(20)
-	SetStatus()
+	CompensationOfflineMsg()
 	go TimingGetOfflineMsg(3)
 	go ReqCount()
 
