@@ -12,12 +12,13 @@ func SetConf(port, cache int, partitions map[string]int32,
 	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
 	nameNode, webServerIp string, webServerPort int,
 	wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string,
-	offlineMsgPartition, offlineMsgStartOffset int) string {
+	offlineMsgPartition, offlineMsgStartOffset, ClearHdfsHdl, GetOfflineMsg int) string {
 	topic := []string{wafTopic, vdsTopic}
 	offset := []int64{wafOffset, vdsOffset}
 
 	conf := Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, offlineMsgStartOffset}
+		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition,
+		offlineMsgStartOffset, ClearHdfsHdl, GetOfflineMsg}
 
 	byte, err := json.Marshal(conf)
 	if nil != err {
@@ -81,8 +82,11 @@ func main() {
 
 	EtcdNodes = confList[1]["etcd"]
 
+	clearHdfsHdl, err := strconv.Atoi(conf.GetValue("timer", "clearHdfsHdl"))
+	getOfflineMsg, err := strconv.Atoi(conf.GetValue("timer", "getOfflineMsg"))
+
 	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, 0)
+		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, 0, clearHdfsHdl, getOfflineMsg)
 
 	InitEtcdCli()
 	EtcdSet("apt/agent/conf", setConf)

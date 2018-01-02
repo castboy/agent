@@ -15,9 +15,9 @@ func main() {
 	Hdfs()
 	go Manage()
 	go InitPrefetch()
-	go SendClearFileHdlMsg(20)
+	go SendClearFileHdlMsg(AgentConf.ClearHdfsHdl)
 	CompensationOfflineMsg()
-	go TimingGetOfflineMsg(3)
+	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
 	time.Sleep(time.Duration(1) * time.Second)
