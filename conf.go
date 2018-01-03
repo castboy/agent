@@ -8,38 +8,29 @@ import (
 	"github.com/widuu/goini"
 )
 
-func SetConf(port, cache int, partitions map[string]int32,
-	wafTopic, vdsTopic string, wafOffset, vdsOffset int64,
-	nameNode, webServerIp string, webServerPort int,
-	wafInstanceSrc, wafInstanceDst string, offlineMsgTopic string,
-	offlineMsgPartition, offlineMsgStartOffset, ClearHdfsHdl, GetOfflineMsg int) string {
-	topic := []string{wafTopic, vdsTopic}
-	offset := []int64{wafOffset, vdsOffset}
-
-	conf := Conf{port, cache, partitions, topic, offset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition,
-		offlineMsgStartOffset, ClearHdfsHdl, GetOfflineMsg}
-
+func SetConf(conf Conf) string {
 	byte, err := json.Marshal(conf)
 	if nil != err {
-		Log("CRT", "json.Marshal err on %v in SetConf", conf)
+		LogCrt("json.Marshal err on %v in SetConf", conf)
 	}
 
 	return string(byte)
 }
 
 func main() {
+	InitLog("conf/log")
+
 	conf := goini.SetConfig("conf.ini")
 	confList := conf.ReadList()
 
 	port, err := strconv.Atoi(conf.GetValue("other", "port"))
 	if nil != err {
-		Log("CRT", "%s", "port config err")
+		LogCrt("%s", "port config err")
 	}
 
 	cache, err := strconv.Atoi(conf.GetValue("other", "cache"))
 	if nil != err {
-		Log("CRT", "%s", "cache config err")
+		LogCrt("%s", "cache config err")
 	}
 
 	wafTopic := conf.GetValue("onlineTopic", "waf")
@@ -47,11 +38,11 @@ func main() {
 
 	wafOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "waf"), 10, 64)
 	if nil != err {
-		Log("CRT", "%s", "wafOffset config err")
+		LogCrt("%s", "wafOffset config err")
 	}
 	vdsOffset, err := strconv.ParseInt(conf.GetValue("onlineOffset", "vds"), 10, 64)
 	if nil != err {
-		Log("CRT", "%s", "vdsOffset config err")
+		LogCrt("%s", "vdsOffset config err")
 	}
 
 	nameNode := conf.GetValue("hdfs", "nameNode")
@@ -62,20 +53,20 @@ func main() {
 	offlineMsgTopic := conf.GetValue("offlineMsg", "topic")
 	offlineMsgPartition, err := strconv.Atoi(conf.GetValue("offlineMsg", "partition"))
 	if nil != err {
-		Log("CRT", "%s", "offlineMsgPartition config err")
+		LogCrt("%s", "offlineMsgPartition config err")
 	}
 
 	webServerIp := conf.GetValue("webServer", "ip")
 	webServerPort, err := strconv.Atoi(conf.GetValue("webServer", "port"))
 	if nil != err {
-		Log("CRT", "%s", "webServerPort config err")
+		LogCrt("%s", "webServerPort config err")
 	}
 
 	var partitions = make(map[string]int32)
 	for key, val := range confList[0]["partition"] {
 		partition, err := strconv.Atoi(val)
 		if nil != err {
-			Log("CRT", "%s", "partition config err")
+			LogCrt("%s", "partition config err")
 		}
 		partitions[key] = int32(partition)
 	}
@@ -85,8 +76,24 @@ func main() {
 	clearHdfsHdl, err := strconv.Atoi(conf.GetValue("timer", "clearHdfsHdl"))
 	getOfflineMsg, err := strconv.Atoi(conf.GetValue("timer", "getOfflineMsg"))
 
-	setConf := SetConf(port, cache, partitions, wafTopic, vdsTopic, wafOffset, vdsOffset, nameNode, webServerIp,
-		webServerPort, wafInstanceSrc, wafInstanceDst, offlineMsgTopic, offlineMsgPartition, 0, clearHdfsHdl, getOfflineMsg)
+	cnf := Conf{
+		EngineReqPort:     port,
+		MaxCache:          cache,
+		Partition:         partitions,
+		Topic:             []string{wafTopic, vdsTopic},
+		Offset:            []int64{wafOffset, vdsOffset},
+		HdfsNameNode:      nameNode,
+		WebServerReqIp:    webServerIp,
+		WebServerReqPort:  webServerPort,
+		WafInstanceSrc:    wafInstanceSrc,
+		WafInstanceDst:    wafInstanceDst,
+		OfflineMsgTopic:   offlineMsgTopic,
+		OfflineMsgPartion: offlineMsgPartition,
+		ClearHdfsHdl:      clearHdfsHdl,
+		GetOfflineMsg:     getOfflineMsg,
+	}
+
+	setConf := SetConf(cnf)
 
 	InitEtcdCli()
 	EtcdSet("apt/agent/conf", setConf)

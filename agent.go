@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	InitLog()
+	InitLog("run/log")
 	GetConf()
 	InitBroker()
 	RightStatus()
