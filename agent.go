@@ -21,6 +21,6 @@ func main() {
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
-	time.Sleep(time.Duration(3) * time.Second)
+	time.Sleep(time.Duration(AgentConf.DelayListen) * time.Second)
 	Listen()
 }

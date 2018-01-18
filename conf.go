@@ -33,6 +33,11 @@ func main() {
 		LogCrt("%s", "cache config err")
 	}
 
+	delayListen, err := strconv.Atoi(conf.GetValue("other", "delayListen"))
+	if nil != err {
+		LogCrt("%s", "delayListen config err")
+	}
+
 	wafTopic := conf.GetValue("onlineTopic", "waf")
 	vdsTopic := conf.GetValue("onlineTopic", "vds")
 
@@ -79,6 +84,7 @@ func main() {
 	cnf := Conf{
 		EngineReqPort:     port,
 		MaxCache:          cache,
+		DelayListen:       delayListen,
 		Partition:         partitions,
 		Topic:             []string{wafTopic, vdsTopic},
 		Offset:            []int64{wafOffset, vdsOffset},
