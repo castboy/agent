@@ -16,6 +16,7 @@ func main() {
 	go Manage()
 	go InitPrefetch()
 	go SendClearFileHdlMsg(AgentConf.ClearHdfsHdl)
+	go ReHdfsCli()
 	CompensationOfflineMsg()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
