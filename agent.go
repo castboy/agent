@@ -19,7 +19,7 @@ func main() {
 	CompensationOfflineMsg()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
-	//	go HdfsClisOffline()
+	go HdfsClisOffline()
 
 	time.Sleep(time.Duration(AgentConf.DelayListen) * time.Second)
 	Listen()
