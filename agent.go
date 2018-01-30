@@ -2,28 +2,29 @@ package main
 
 import (
 	. "agent_pkg"
+	"fmt"
+	"runtime"
+	"strconv"
 	"time"
-        "fmt"
-        "github.com/widuu/goini"
-        "strconv"
-        "runtime"
+
+	"github.com/widuu/goini"
 )
 
 func cpuNum() int {
-    conf := goini.SetConfig("conf.ini")
-    cpu, err := strconv.Atoi(conf.GetValue("other", "cpu"))
-    if nil != err {
-        fmt.Println(err.Error())
-    }
+	conf := goini.SetConfig("conf.ini")
+	cpu, err := strconv.Atoi(conf.GetValue("other", "cpu"))
+	if nil != err {
+		fmt.Println(err.Error())
+	}
 
-    return cpu
+	return cpu
 }
 
 func main() {
-        num := cpuNum()
-        if -1 != num {
-            runtime.GOMAXPROCS(num)
-        }
+	num := cpuNum()
+	if -1 != num {
+		runtime.GOMAXPROCS(num)
+	}
 
 	InitLog("run/log")
 	GetConf()
@@ -34,8 +35,11 @@ func main() {
 	Hdfs()
 	go Manage()
 	go InitPrefetch()
-        go SendClearFileHdlMsg(AgentConf.ClearHdfsHdl)
+	go SendClearFileHdlMsg(AgentConf.ClearHdfsHdl)
+	go OfflineMsgOffsetRecord()
 	CompensationOfflineMsg()
+
+	time.Sleep(time.Duration(10) * time.Second)
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
