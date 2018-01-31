@@ -36,10 +36,9 @@ func main() {
 	go Manage()
 	go InitPrefetch()
 	go SendClearFileHdlMsg(AgentConf.ClearHdfsHdl)
-	go OfflineMsgOffsetRecord()
 	CompensationOfflineMsg()
 
-	time.Sleep(time.Duration(10) * time.Second)
+	go CollectOfflineMsgExedRes()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
