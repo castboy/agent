@@ -41,6 +41,7 @@ func main() {
 	go CollectOfflineMsgExedRes()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
+	go ChTest()
 
 	time.Sleep(time.Duration(5) * time.Second)
 	Listen()
