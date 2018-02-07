@@ -39,6 +39,7 @@ func main() {
 	CompensationOfflineMsg()
 
 	go CollectOfflineMsgExedRes()
+	go MsgExeVerify()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
