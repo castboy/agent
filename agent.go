@@ -44,5 +44,6 @@ func main() {
 	go ReqCount()
 
 	time.Sleep(time.Duration(5) * time.Second)
+	ResetOffsetInConfFile()
 	Listen()
 }
