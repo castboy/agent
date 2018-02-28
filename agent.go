@@ -40,6 +40,7 @@ func main() {
 
 	go CollectOfflineMsgExedRes()
 	go MsgExeVerify()
+	go ManageHeartBeat()
 	go TimingGetOfflineMsg(AgentConf.GetOfflineMsg)
 	go ReqCount()
 
