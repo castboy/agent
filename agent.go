@@ -27,6 +27,7 @@ func main() {
 	}
 
 	InitLog("run/log")
+	InitLogXdrErr("run/xdr/log")
 	GetConf()
 	InitBroker()
 	RightStatus()
