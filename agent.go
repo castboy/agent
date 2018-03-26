@@ -2,30 +2,11 @@ package main
 
 import (
 	. "agent_pkg"
-	"fmt"
-	"runtime"
-	"strconv"
 	"time"
-
-	"github.com/widuu/goini"
 )
 
-func cpuNum() int {
-	conf := goini.SetConfig("conf.ini")
-	cpu, err := strconv.Atoi(conf.GetValue("other", "cpu"))
-	if nil != err {
-		fmt.Println(err.Error())
-	}
-
-	return cpu
-}
-
 func main() {
-	num := cpuNum()
-	if -1 != num {
-		runtime.GOMAXPROCS(num)
-	}
-
+	LimitCpuNum()
 	InitLog("run/log")
 	InitLogXdrErr("run/xdr/log")
 	GetConf()
